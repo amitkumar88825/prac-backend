@@ -1,0 +1,28 @@
+{
+  "name": "prac-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitkumar88825/prac-backend.git"
+  },
+  "keywords": [],
+  "author": "Amit Yadav",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/amitkumar88825/prac-backend/issues"
+  },
+  "homepage": "https://github.com/amitkumar88825/prac-backend#readme",
+  "dependencies": {
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  }
+}

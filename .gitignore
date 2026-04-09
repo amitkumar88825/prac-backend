@@ -1,0 +1,5 @@
+
+# ignoring files.
+/node_modules
+/dist
+/.env
