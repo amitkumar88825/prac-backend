@@ -5,14 +5,14 @@ env:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -25,19 +25,28 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and Push Image
+      - name: Build Image
+        run: docker build -t backend .
+
+      - name: Tag Image
         run: |
-          docker build -t your-repo-url:latest .
-          docker push your-repo-url:latest
+          docker tag backend:latest ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
+
+      - name: Push Image
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
 
       - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull your-repo-url:latest
+            docker pull ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
+
             docker stop my-app || true
             docker rm my-app || true
-            docker run -d --name my-app -p 80:80 your-repo-url:latest
+
+            docker run -d -p 5000:5000 --name my-app \
+              ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
