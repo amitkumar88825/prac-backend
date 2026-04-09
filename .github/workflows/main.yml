@@ -30,11 +30,11 @@ jobs:
 
       - name: Tag Image
         run: |
-          docker tag backend:latest ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
+          docker tag backend:latest ${{ steps.login-ecr.outputs.registry }}/prac-backend:latest
 
       - name: Push Image
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
+          docker push ${{ steps.login-ecr.outputs.registry }}/prac-backend:latest
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -43,10 +43,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
+            docker pull ${{ steps.login-ecr.outputs.registry }}/prac-backend:latest
 
             docker stop my-app || true
             docker rm my-app || true
 
             docker run -d -p 5000:5000 --name my-app \
-              ${{ steps.login-ecr.outputs.registry }}/backend-repo:latest
+              ${{ steps.login-ecr.outputs.registry }}/prac-backend:latest
